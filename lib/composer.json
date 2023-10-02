@@ -1,0 +1,27 @@
+{
+    "name": "saulmoralespa/360dialog-php",
+    "description": "360dialog API php SDK.",
+    "keywords": ["360dialog", "php", "WhatsApp Cloud API"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Saul Morales",
+            "email": "info@saulmoraespa.com",
+            "homepage": "https://saulmoralespa.com",
+            "role": "Developer"
+        }
+    ],
+    "type": "library",
+    "require": {
+		"php": "^7.4 || ^8.0",
+        "guzzlehttp/guzzle": "^7.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Saulmoralespa\\Dialog360\\": "src/"
+        }
+    },
+    "config": {
+        "platform-check": false
+    }
+}
