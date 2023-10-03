@@ -201,23 +201,23 @@ class SMP_Whatsapp_Remarketing_360dialog_WR_Plugin
         global $wpdb;
 
         $startDate = wp_date('Y-m-d', strtotime("-$days days"));
-        $endDate = wp_date('Y-m-d');
 
         $query = $wpdb->prepare(
             <<<SQL
-                SELECT DISTINCT p.ID, MAX( CASE WHEN pm.meta_key = '_billing_phone' THEN pm.meta_value END ) AS phone, MAX( CASE WHEN pm.meta_key = '_billing_first_name' THEN pm.meta_value END )  AS first_name    
-                    FROM {$wpdb->prefix}posts AS p
-                    JOIN {$wpdb->prefix}postmeta AS pm ON p.ID = pm.post_id
-                    JOIN {$wpdb->prefix}woocommerce_order_items AS woi ON p.ID = woi.order_id
-                    JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS woim ON woi.order_item_id = woim.order_item_id
-                    JOIN {$wpdb->users} AS u ON p.post_author = u.ID
-                    WHERE p.post_type = 'shop_order'
-                    AND p.post_status IN ('wc-completed')
-                    AND woim.meta_key = '_product_id'
-                    AND p.post_date >= %s
-                    AND p.post_date < %s
+                SELECT
+                    MAX( CASE WHEN pm.meta_key = '_billing_phone' THEN pm.meta_value END ) AS phone,
+                    MAX( CASE WHEN pm.meta_key = '_billing_first_name' THEN pm.meta_value END )  AS first_name 
+                FROM {$wpdb->prefix}posts AS p
+                JOIN {$wpdb->prefix}postmeta AS pm ON p.ID = pm.post_id
+                JOIN {$wpdb->prefix}woocommerce_order_items AS woi ON p.ID = woi.order_id
+                JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS woim ON woi.order_item_id = woim.order_item_id
+                LEFT JOIN {$wpdb->users} AS u ON p.post_author = u.ID
+                WHERE p.post_type = 'shop_order'
+                AND p.post_status IN ('wc-completed')
+                AND DATE(p.post_date) = %s
+                GROUP BY p.ID
             SQL,
-            $startDate, $endDate
+            $startDate
         );
 
         return $wpdb->get_results($query, ARRAY_A);
